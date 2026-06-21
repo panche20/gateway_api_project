@@ -111,17 +111,10 @@ kubectl get crd | grep gateway
 
 # Step 3: Install Envoy Gateway
 
-Add Helm repository:
-
 ```bash
-helm repo add envoy-gateway https://helm.envoyproxy.io
-helm repo update
-```
+kubectl create ns envoy-gateway-system
 
-Install:
-
-```bash
-helm install eg envoy-gateway/gateway-helm \
+helm install eg oci://docker.io/envoyproxy/gateway-helm \
 -n envoy-gateway-system \
 --create-namespace
 ```
@@ -132,7 +125,18 @@ Verify:
 kubectl get pods -n envoy-gateway-system
 ```
 
----
+# Step 3.1: Create Create gatewayclass
+
+Create gateway-class.yaml file & paste in below code:
+
+```
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: eg
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+```
 
 # Step 4: Deploy Application
 
@@ -233,6 +237,14 @@ Example:
 ```text
 80:30975/TCP
 443:32128/TCP
+```
+
+Now, edit the svc.
+
+```
+kubectl edit svc envoy-default
+
+Change it to type: NodePort
 ```
 
 ---
