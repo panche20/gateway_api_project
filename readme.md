@@ -125,6 +125,23 @@ Verify:
 kubectl get pods -n envoy-gateway-system
 ```
 
+Check depployment:
+
+```
+kubectl get deployment -A | grep envoy-default
+
+or
+
+kubectl get deployment -n envoy-gateway-system
+
+Scale the deployment to 2 replicas:
+
+kubectl scale deployment envoy-default-edge-gateway-be515bab --replicas=2 -n envoy-gateway-system
+
+Verify using:
+kubectl get pods -n envoy-gateway-system -o wide
+```
+
 # Step 3.1: Create Create gatewayclass
 
 Create gateway-class.yaml file & paste in below code:
